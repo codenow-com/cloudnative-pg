@@ -653,6 +653,7 @@ func (r *ClusterReconciler) createServiceAccount(ctx context.Context, cluster *a
 				utils.KubernetesAppManagedByLabelName: utils.ManagerName,
 			},
 		},
+		AutomountServiceAccountToken: new(bool),
 	}
 	err = specs.UpdateServiceAccount(generatedPullSecretNames, serviceAccount)
 	if err != nil {
