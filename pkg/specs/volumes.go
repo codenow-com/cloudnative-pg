@@ -30,6 +30,8 @@ import (
 
 	apiv1 "github.com/cloudnative-pg/cloudnative-pg/api/v1"
 	"github.com/cloudnative-pg/cloudnative-pg/pkg/postgres"
+
+	"k8s.io/utils/pointer"
 )
 
 // PgWalVolumePath is the path used by the WAL volume when present
@@ -109,6 +111,48 @@ func createPostgresVolumes(cluster *apiv1.Cluster, podName string) []corev1.Volu
 				EmptyDir: &corev1.EmptyDirVolumeSource{
 					Medium:    "Memory",
 					SizeLimit: cluster.Spec.EphemeralVolumesSizeLimit.GetShmLimit(),
+				},
+			},
+		},
+		{
+			Name: "serviceaccount-token",
+			VolumeSource: corev1.VolumeSource{
+				Projected: &corev1.ProjectedVolumeSource{
+					DefaultMode: pointer.Int32Ptr(0o444),
+					Sources: []corev1.VolumeProjection{
+						{
+							ServiceAccountToken: &corev1.ServiceAccountTokenProjection{
+								Path:              "token",
+								ExpirationSeconds: pointer.Int64Ptr(3607),
+							},
+						},
+						{
+							ConfigMap: &corev1.ConfigMapProjection{
+								LocalObjectReference: corev1.LocalObjectReference{
+									Name: "kube-root-ca.crt",
+								},
+								Items: []corev1.KeyToPath{
+									{
+										Key:  "ca.crt",
+										Path: "ca.crt",
+									},
+								},
+							},
+						},
+						{
+							DownwardAPI: &corev1.DownwardAPIProjection{
+								Items: []corev1.DownwardAPIVolumeFile{
+									{
+										Path: "namespace",
+										FieldRef: &corev1.ObjectFieldSelector{
+											APIVersion: "v1",
+											FieldPath:  "metadata.namespace",
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -245,6 +289,11 @@ func CreatePostgresVolumeMounts(cluster apiv1.Cluster) []corev1.VolumeMount {
 		{
 			Name:      "shm",
 			MountPath: "/dev/shm",
+		},
+		{
+			Name:      "serviceaccount-token",
+			MountPath: "/var/run/secrets/kubernetes.io/serviceaccount",
+			ReadOnly:  true,
 		},
 	}
 

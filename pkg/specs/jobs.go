@@ -354,7 +354,8 @@ func CreatePrimaryJob(cluster apiv1.Cluster, nodeSerial int, role jobRole, initC
 					},
 				},
 				Spec: corev1.PodSpec{
-					Hostname: jobName,
+					AutomountServiceAccountToken: new(bool),
+					Hostname:                     jobName,
 					InitContainers: []corev1.Container{
 						createBootstrapContainer(cluster),
 					},
