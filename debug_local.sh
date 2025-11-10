@@ -3,7 +3,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-cd ./cloudnative-pg
+cd ./workspace
 
 make build-manager
 # This step intentionally fail. It is needed to copy files to correct places
