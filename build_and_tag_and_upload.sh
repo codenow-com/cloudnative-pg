@@ -8,7 +8,7 @@ WORKSPACE_DIRECTORY='./workspace'
 
 REPOSITORY='git@github.com:codenow-com/cloudnative-pg'
 BRANCH='custom/main'
-VERSION='1.27.1-cn.0.3'
+VERSION='v1.29.1-cn.0.1'
 ARCHITECTURES=('amd64' 'arm64')
 REGISTRIES=('codenow-codenow-data-plane.jfrog.io' 'codenow-codenow-releases.jfrog.io')
 
