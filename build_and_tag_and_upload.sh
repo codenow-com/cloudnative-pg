@@ -8,7 +8,7 @@ WORKSPACE_DIRECTORY='./workspace'
 
 REPOSITORY='git@github.com:codenow-com/cloudnative-pg'
 BRANCH='custom/main'
-VERSION='v1.29.1-cn.0.1'
+VERSION='v1.30.0-cn.0.1'
 ARCHITECTURES=('amd64' 'arm64')
 REGISTRIES=('codenow-codenow-data-plane.jfrog.io' 'codenow-codenow-releases.jfrog.io')
 
@@ -26,7 +26,7 @@ docker buildx rm multiplatform &> /dev/null || true
 docker buildx create --name multiplatform --use
 
 rm -rf "$WORKSPACE_DIRECTORY"
-git clone --branch "$BRANCH" --single-branch --depth 1 "$REPOSITORY" "$WORKSPACE_DIRECTORY"
+git clone --branch "$BRANCH" "$REPOSITORY" "$WORKSPACE_DIRECTORY"   # --single-branch --depth 1
 cd "$WORKSPACE_DIRECTORY"
 
 # BUILD Stage
