@@ -189,7 +189,8 @@ func createClusterPodSpec(
 	enableHTTPS bool,
 ) corev1.PodSpec {
 	return corev1.PodSpec{
-		Hostname: podName,
+		AutomountServiceAccountToken: new(bool),
+		Hostname:                     podName,
 		InitContainers: []corev1.Container{
 			createBootstrapContainer(cluster, getExtensions(&cluster)),
 		},
